@@ -8,26 +8,38 @@ import java.util.Random;
 
 public class GameOfColonies extends JPanel implements ActionListener {
 
-    private static final int WIDTH = 1200; // Window width
-    private static final int HEIGHT = 800; // Window height
+    private static int WIDTH;  // Window width
+    private static int HEIGHT; // Window height
     private static final int CELL_SIZE = 4; // Size of each cell
-    private static final int COLS = WIDTH / CELL_SIZE; // Number of columns
-    private static final int ROWS = HEIGHT / CELL_SIZE; // Number of rows
+    private static int COLS;   // Number of columns
+    private static int ROWS;   // Number of rows
     private static final int INITIAL_COLONIES = 10; // Number of initial colonies
     private static final int GENERATION_INTERVAL = 200; // Time between generations (ms)
 
-    private int[][] grid = new int[COLS][ROWS]; // Grid for cell states
-    private Color[][] colors = new Color[COLS][ROWS]; // Color array for each cell
+    private int[][] grid; // Grid for cell states
+    private Color[][] colors; // Color array for each cell
     private Random random = new Random(); // Random generator for initial colonies
     private javax.swing.Timer timer; // Timer to handle periodic updates
     private int generations = 0; // Generation counter
     private int livingCells = 0; // Counter for total living cells
 
     private JButton exitButton;
-	private JButton resetButton;
-
+    private JButton resetButton;
 
     public GameOfColonies() {
+        // Get screen size and adjust the panel size accordingly
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        WIDTH = screenSize.width;
+        HEIGHT = screenSize.height;
+
+        // Calculate number of columns and rows based on screen size
+        COLS = WIDTH / CELL_SIZE;
+        ROWS = HEIGHT / CELL_SIZE;
+
+        // Initialize grid and color arrays based on screen dimensions
+        grid = new int[COLS][ROWS];
+        colors = new Color[COLS][ROWS];
+
         setPreferredSize(new Dimension(WIDTH, HEIGHT)); // Set size of the panel
         setBackground(Color.WHITE); // Set background color
         initializeColonies(); // Initialize the first colonies
@@ -38,16 +50,15 @@ public class GameOfColonies extends JPanel implements ActionListener {
         exitButton.addActionListener(e -> System.exit(0));
         setLayout(new BorderLayout());
         add(exitButton, BorderLayout.SOUTH);
-		
-		resetButton = new JButton("Reset");
+
+        resetButton = new JButton("Reset");
         resetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 resetGame();
             }
         });
-        add(resetButton, BorderLayout.SOUTH);   
-
+        add(resetButton, BorderLayout.SOUTH);  
     }
 
     private void resetGame() {
@@ -61,8 +72,6 @@ public class GameOfColonies extends JPanel implements ActionListener {
         }
         initializeColonies();
         repaint();
-    }
-
     }
 
     private void initializeColonies() {
